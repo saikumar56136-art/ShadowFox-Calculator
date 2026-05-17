@@ -1,20 +1,60 @@
 # ShadowFox Calculator
 
-A Java calculator built during ShadowFox internship.
+A feature-rich calculator built with Java as part of the
+ShadowFox Java Internship - Task 1 (All Tiers Completed).
 
 ## Features
+
+### Tier 1 - Console Calculator
 - Basic arithmetic (Add, Subtract, Multiply, Divide)
-- Scientific (Square Root, Power, Percentage)
+- Scientific calculations (Square Root, Power)
 - Unit Converter (Temperature & Currency)
-- Console version + Swing GUI version
+- BigDecimal precision (no floating point errors)
+- Full exception handling
+
+### Tier 1 - Swing GUI Calculator
+- Beautiful dark theme UI
+- All arithmetic operations
+- Scientific buttons (√, x²)
+- Unit converter buttons (°C→°F, °F→°C, $→₹, ₹→$)
+- Color coded buttons
+
+### Tier 2 - Expression Parser (BODMAS)
+- Type full expressions like `5+3*2` or `(5+3)*2`
+- Correct operator precedence (BODMAS/PEMDAS)
+- Supports brackets and nested expressions
+- Built using Shunting Yard Algorithm with Stack
 
 ## How to Run
-1. Clone the repo
-2. Open in IntelliJ IDEA
-3. Run `Main.java` for console version
-4. Run `CalculatorGUI.java` for GUI version
 
-## Tech Used
+### Console Version
+1. Open project in IntelliJ IDEA
+2. Run `Main.java`
+
+### GUI Version (with Expression Parser)
+1. Open project in IntelliJ IDEA
+2. Run `CalculatorGUI.java`
+3. Use buttons for basic calculations
+4. Type expressions in top field and click `= Evaluate`
+
+## Expression Examples
+| Expression | Result |
+|-----------|--------|
+| `5+3*2` | `11.0` |
+| `(5+3)*2` | `16.0` |
+| `10+2*5-(3+1)` | `16.0` |
+
+## Technologies Used
 - Java 25
-- BigDecimal for precision
-- Java Swing for GUI
+- Swing (GUI)
+- BigDecimal (Precision)
+- Stack (Shunting Yard Algorithm)
+
+## Project Structure
+src/
+├── Main.java              → Console Calculator
+├── CalculatorGUI.java     → Swing GUI Calculator
+└── ExpressionParser.java  → BODMAS Expression Parser
+
+## Author
+Sai Kumar - ShadowFox Java Internship 2026
