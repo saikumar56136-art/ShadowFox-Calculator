@@ -7,19 +7,57 @@ public class CalculatorGUI {
 
     private JFrame frame;
     private JTextField display;
+    private JTextField expressionField;
     private String currentInput = "";
     private String operator = "";
     private BigDecimal firstNumber = BigDecimal.ZERO;
     private boolean newInput = true;
+    private ExpressionParser parser = new ExpressionParser();
 
     public CalculatorGUI() {
         frame = new JFrame("ShadowFox Calculator");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 600);
+        frame.setSize(400, 700);
         frame.setLayout(new BorderLayout());
         frame.getContentPane().setBackground(Color.decode("#1e1e2e"));
 
-        // Display screen
+        // Top panel with expression input + display
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BorderLayout());
+        topPanel.setBackground(Color.decode("#1e1e2e"));
+
+        // Expression input field
+        expressionField = new JTextField("Type expression e.g. 5+3*2");
+        expressionField.setFont(new Font("Arial", Font.PLAIN, 14));
+        expressionField.setBackground(Color.decode("#181825"));
+        expressionField.setForeground(Color.GRAY);
+        expressionField.setBorder(BorderFactory.createEmptyBorder(8, 10, 8, 10));
+
+        // Evaluate button
+        JButton evalBtn = new JButton("= Evaluate");
+        evalBtn.setBackground(Color.decode("#a6e3a1"));
+        evalBtn.setForeground(Color.BLACK);
+        evalBtn.setFont(new Font("Arial", Font.BOLD, 13));
+        evalBtn.setFocusPainted(false);
+        evalBtn.setBorderPainted(false);
+        evalBtn.addActionListener(e -> evaluateExpression());
+
+        // Clear placeholder on click
+        expressionField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent e) {
+                if (expressionField.getText().equals("Type expression e.g. 5+3*2")) {
+                    expressionField.setText("");
+                    expressionField.setForeground(Color.WHITE);
+                }
+            }
+        });
+
+        JPanel exprPanel = new JPanel(new BorderLayout());
+        exprPanel.setBackground(Color.decode("#1e1e2e"));
+        exprPanel.add(expressionField, BorderLayout.CENTER);
+        exprPanel.add(evalBtn, BorderLayout.EAST);
+
+        // Main display
         display = new JTextField("0");
         display.setFont(new Font("Arial", Font.BOLD, 36));
         display.setHorizontalAlignment(JTextField.RIGHT);
@@ -27,7 +65,10 @@ public class CalculatorGUI {
         display.setBackground(Color.decode("#2e2e3e"));
         display.setForeground(Color.WHITE);
         display.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        frame.add(display, BorderLayout.NORTH);
+
+        topPanel.add(exprPanel, BorderLayout.NORTH);
+        topPanel.add(display, BorderLayout.CENTER);
+        frame.add(topPanel, BorderLayout.NORTH);
 
         // Button panel
         JPanel panel = new JPanel();
@@ -35,7 +76,6 @@ public class CalculatorGUI {
         panel.setBackground(Color.decode("#1e1e2e"));
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Button labels
         String[] buttons = {
                 "C", "±", "%", "÷",
                 "7", "8", "9", "×",
@@ -54,6 +94,17 @@ public class CalculatorGUI {
         frame.setVisible(true);
     }
 
+    private void evaluateExpression() {
+        try {
+            String expr = expressionField.getText().trim();
+            double result = parser.evaluate(expr);
+            display.setText(String.valueOf(result));
+            currentInput = String.valueOf(result);
+        } catch (Exception ex) {
+            display.setText("Error: Invalid Expression");
+        }
+    }
+
     private JButton createButton(String label) {
         JButton btn = new JButton(label);
         btn.setFont(new Font("Arial", Font.BOLD, 16));
@@ -61,7 +112,6 @@ public class CalculatorGUI {
         btn.setBorderPainted(false);
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        // Color coding
         if (label.equals("=")) {
             btn.setBackground(Color.decode("#f38ba8"));
             btn.setForeground(Color.WHITE);
@@ -91,6 +141,8 @@ public class CalculatorGUI {
                     firstNumber = BigDecimal.ZERO;
                     operator = "";
                     display.setText("0");
+                    expressionField.setText("Type expression e.g. 5+3*2");
+                    expressionField.setForeground(Color.GRAY);
                     newInput = true;
                 }
                 case "÷", "×", "-", "+" -> {
